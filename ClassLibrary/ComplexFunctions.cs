@@ -19,7 +19,7 @@ namespace ClassLibrary
         /// <param name="weight"> Вес. </param>
         /// <param name="height"> Рост. </param>
         /// <returns> Метод возвращает ИМТ. </returns>
-        public string GetBMI(double weight, double height)
+        public string GetBMI(ref double weight, ref double height)
         {
             if (weight<5||height<0.2|| weight > 200 || height > 2.5)
             {
@@ -33,7 +33,7 @@ namespace ClassLibrary
         /// </summary>
         /// <param name="size"> Размер создаваемого массива. </param>
         /// <returns> Метод возвращает отсортированный по возрастанию массив. </returns>
-        public string GetRandomMassive(int size)
+        public string GetRandomMassive(ref int size)
         {
             if (size < 1)
             {
@@ -43,7 +43,7 @@ namespace ClassLibrary
             var massive = new int[size];
             var max = 0;
             var min = 0;
-            for (int i = 0; i < size; i++)
+            for (var i = 0; i < size; i++)
             {
                 massive[i] = random.Next(-100,100);
                 if (max < massive[i])
@@ -58,7 +58,7 @@ namespace ClassLibrary
             var sortedMassive = new StringBuilder();
             while (min != max+1)
             {
-                for (int i = 0; i < size; i++)
+                for (var i = 0; i < size; i++)
                 {
                     if (massive[i] == min)
                     {
@@ -76,7 +76,7 @@ namespace ClassLibrary
         /// </summary>
         /// <param name="text"> Строка введенного теста. </param>
         /// <returns> Возвращает среднюю длинну слов. </returns>
-        public string GetAverage(string text)
+        public string GetAverage(ref string text)
         {
             if (text == "")
             {
@@ -84,7 +84,8 @@ namespace ClassLibrary
             }
             string[] words = text.Split(' ');
             var lettersCount = new int[words.Length];
-            for(int i = 0; i < words.Length; i++)
+            var sum = 0;
+            for (var i = 0; i < words.Length; i++)
             {
                 foreach (char a in words[i])
                 {
@@ -93,10 +94,6 @@ namespace ClassLibrary
                         lettersCount[i]++;
                     }
                 }
-            }
-            double sum = 0;
-            for (int i = 0; i < lettersCount.Length; i++)
-            {
                 sum += lettersCount[i];
             }
             return (sum/ lettersCount.Length).ToString();

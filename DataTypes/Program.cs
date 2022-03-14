@@ -20,7 +20,8 @@ namespace DataTypes
                         Console.WriteLine("Вычисление индекса массы тела." + "\n" + "Введите вес (в кг).");
                         var weight = double.Parse(Console.ReadLine());
                         Console.WriteLine("Введите рост (в см).");
-                        Console.WriteLine("Ваш ИМТ = " + CallBMI(weight, double.Parse(Console.ReadLine())));
+                        var height = double.Parse(Console.ReadLine());
+                        Console.WriteLine("Ваш ИМТ = " + CallFunctions.CallBMI(ref weight, ref height));
                         Console.WriteLine();
                     }
                     catch
@@ -33,7 +34,8 @@ namespace DataTypes
                     try
                     {
                         Console.WriteLine("Сортировка массива случайных чисел." + "\n" + "Введите размер массива.");
-                        Console.WriteLine("Отсортированный массив: " + "\n" + CallMassive(int.Parse(Console.ReadLine())));
+                        var size = int.Parse(Console.ReadLine());
+                        Console.WriteLine("Отсортированный массив: " + "\n" + CallFunctions.CallMassive(ref size));
                     }
                     catch
                     {
@@ -45,7 +47,11 @@ namespace DataTypes
                     try
                     {
                         Console.WriteLine("3. Вычисление средней длинны слов в строке текста." + "\n"+"Введите строку текста.");
-                        Console.WriteLine("Средняя длинна символов в строке: " + CallAverage(Console.ReadLine()));
+                        var text = Console.ReadLine();
+                        string result;
+                        //Console.WriteLine("Средняя длинна символов в строке: " + CallFunctions.CallAverage(text,out result));
+                        CallFunctions.CallAverage(ref text, out result);
+                        Console.WriteLine(result);
                     }
                     catch
                     {
@@ -56,24 +62,30 @@ namespace DataTypes
                     Console.WriteLine("Не выбрана ни одна из функций.");
                     break;
             }
+            CallFunctions.TrashCollection();
         }
 
+        
+    }
+    public struct CallFunctions
+    {
         /// <summary>
         /// Метод вызывает функцию расчета ИМТ из библиотеки классов.
         /// </summary>
         /// <param name="weight"> Вес. </param>
         /// <param name="height"> Рост. </param>
         /// <returns></returns>
-        public static string CallBMI(double weight, double height)
+        public static string CallBMI(ref double weight, ref double height)
         {
             try
             {
                 var functions = new ClassLibrary.ComplexFunctions();
-                return functions.GetBMI(weight, height / 100);
+                height = height / 100;
+                return functions.GetBMI(ref weight,ref height);
             }
             catch (Exception e)
             {
-                return "\n"+"Рост или вес слишком малы или велики.";
+                return "\n" + "Рост или вес слишком малы или велики.";
             }
         }
 
@@ -82,12 +94,12 @@ namespace DataTypes
         /// </summary>
         /// <param name="size"> Размер массива. </param>
         /// <returns></returns>
-        public static string CallMassive(int size)
+        public static string CallMassive(ref int size)
         {
             try
             {
                 var functions = new ClassLibrary.ComplexFunctions();
-                return functions.GetRandomMassive(size);
+                return functions.GetRandomMassive(ref size);
             }
             catch (Exception e)
             {
@@ -100,19 +112,24 @@ namespace DataTypes
         /// </summary>
         /// <param name="text"> Строка текста. </param>
         /// <returns></returns>
-        public static string CallAverage(string text)
+        public static void CallAverage(ref string text,out string result)
         {
             try
             {
                 var functions = new ClassLibrary.ComplexFunctions();
-                return functions.GetAverage(text);
+                result=functions.GetAverage(ref text);
 
             }
             catch (Exception e)
             {
-                return "\n" + "Cтрока пуста";
+                result= "\n" + "Cтрока пуста";
             }
         }
-
+        public static void TrashCollection()
+        {
+            Console.WriteLine("Используемая память до сбора мусора: {0}", GC.GetTotalMemory(false));
+            GC.Collect();
+            Console.WriteLine("Используемая память после сбора мусора: {0}", GC.GetTotalMemory(true));
+        }
     }
 }
